@@ -2,14 +2,14 @@
 
 This project investigates how smoking status and geographic region influence healthcare charges using the **US Health Insurance Dataset**. It applies statistical techniques and data visualization to uncover patterns and relationships in medical costs, aiming to support informed policy-making and improve public health outcomes.
 
-## 📌 Project Overview
+## Project Overview
 
 This analysis answers two primary research questions:
 
 1. **Does smoking status significantly affect medical charges?**
 2. **Is there a regional disparity in medical charges across different parts of the US?**
 
-## 📊 Dataset
+## Dataset
 
 - **Source**: [Kaggle - US Health Insurance Dataset](https://www.kaggle.com/datasets/teertha/ushealthinsurancedataset/data)
 - **Size**: 1,338 rows × 7 columns
@@ -22,7 +22,7 @@ This analysis answers two primary research questions:
   - `region` (northeast/northwest/southeast/southwest)
   - `charges` (float)
 
-## 🧪 Methodology
+## Methodology
 
 ### 1. Data Cleaning & Transformation
 - Encoded `smoker` as binary (1 for smoker, 0 for non-smoker)
@@ -41,24 +41,24 @@ This analysis answers two primary research questions:
 - **Pearson Correlation**: Evaluated strength of relationship between variables
 - **Linear Regression**: Modeled impact of smoker status and region on medical charges
 
-## 📈 Key Findings
+## Key Findings
 
-### 💨 Smoking vs. Non-Smoking
+### Smoking vs. Non-Smoking
 - **Smokers** incur **significantly higher** medical charges (avg. ~$22,014) than **non-smokers** (~$8,362)
 - Regression shows smokers pay **$13,652 more** on average
 - Correlation coefficient: **0.60** (moderate positive)
 
-### 🌍 Regional Differences
+### Regional Differences
 - **Southwest** region consistently shows **higher** charges compared to other regions
 - Some regional charge differences are statistically significant (ANOVA p-value = 0.00153), though the correlation is weak (-0.091)
 
-## 📚 Tools & Technologies
+## Tools & Technologies
 - Python
 - Pandas, NumPy
 - Matplotlib, Seaborn
 - SciPy, Statsmodels
 
-## ✅ Conclusion
+## Conclusion
 
 - **Smoking status has a clear and significant impact** on healthcare charges.
 - **Regional differences exist**, with the southwest region standing out, although the effect is less pronounced than smoking.
