@@ -1,0 +1,233 @@
+---
+title: "Project"
+output: html_document
+date: "2023-12-03"
+---
+
+```{r setup, include=FALSE}
+library (tidyverse)
+library (dplyr)
+```
+
+```{r}
+insurance <- read.csv("C:/Users/91905/OneDrive - Indiana University/Applied Stats/cleaned_insurance.csv")
+
+```
+
+```{r}
+insurance <- insurance |> 
+  mutate(smoker= ifelse(smoker=='yes', 1,0))
+```
+
+Cleaning up the dataset
+```{r}
+insurance <- distinct(insurance)
+print (insurance)
+```
+
+
+```{r}
+# Identifying outliers
+Q1 <- quantile(insurance$charges, 0.25)
+Q3 <- quantile(insurance$charges, 0.75)
+IQR <- Q3 - Q1
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Remove rows with charges outside the bounds
+insurance_cleaned <- insurance[insurance$charges >= lower_bound & insurance$charges <= upper_bound, ]
+summary(insurance_cleaned)
+print (insurance_cleaned)
+
+```
+
+**For Smokers**
+```{r}
+# Box plot
+boxplot(charges ~ smoker, data = insurance, col = c("blue", "orange"),
+        main = "Box Plot of Charges by Smoking Status",
+        xlab = "Smoker", ylab = "Charges")
+```
+
+```{r}
+# Descriptive statistics
+by(insurance$charges, insurance$smoker, summary)
+```
+
+```{r}
+# Histogram
+par(mfrow = c(1, 2))
+hist(insurance$charges[insurance$smoker == "1"], col = "orange",
+     main = "Histogram of Charges for Smokers", xlab = "Charges")
+hist(insurance$charges[insurance$smoker == "0"], col = "blue",
+     main = "Histogram of Charges for Non-Smokers", xlab = "Charges")
+par(mfrow = c(1, 1))
+
+```
+
+```{r}
+# Save the cleaned dataset to a new CSV file
+write.csv(insurance_cleaned, file = "~/Desktop/cleaned_insurance.csv", row.names = FALSE) 
+```
+
+#t-test 
+```{r}
+insurance <- read.csv("~/Desktop/cleaned_insurance.csv")
+
+# Separating the charges for smokers and non-smokers
+charges_smokers <- insurance$charges[insurance$smoker == 1]
+charges_non_smokers <- insurance$charges[insurance$smoker == 0]
+
+
+# Performing a two-sample t-test
+t_test_result <- t.test(charges_smokers, charges_non_smokers)
+
+print(t_test_result)
+```
+#ANOVA test
+```{r}
+grouped_data <- split(insurance$charges, insurance$smoker)
+
+anova_result <- aov(charges ~ smoker, data = insurance)
+
+# Display the results of the ANOVA
+summary(anova_result)
+
+
+```
+
+#LINEAR REGRESSION
+```{r}
+model <- lm(charges ~ smoker, data = insurance)
+
+summary(model)
+
+plot(insurance$smoker, insurance$charges, main = "Regression Analysis", 
+     xlab = "Smoker", ylab = "Charges", col = insurance$smoker)
+abline(model, col = "red")
+legend("top", legend = c("Non-Smoker", "Smoker"), col = c(0, 1), pch = 1)
+```
+
+```{r}
+correlation_coefficient <- cor(insurance$charges, as.numeric(insurance$smoker))
+print(paste("Correlation Coefficient:", correlation_coefficient))
+
+```
+
+```{r}
+model <- lm(charges ~ smoker, data = insurance)
+summary(model) 
+```
+
+**For REGIONS** 
+
+```{r}
+# Assuming 'insurance' is your dataframe with the 'region' column
+insurance <- read.csv("~/Desktop/cleaned_insurance.csv")
+
+# Convert 'region' to a factor and then to numerical values (1, 2, 3, 4)
+insurance$region_numeric <- as.numeric(factor(insurance$region, levels = c("northeast", "northwest", "southeast", "southwest")))
+
+# Display the updated dataframe
+head(insurance)
+
+```
+
+```{r}
+# Box plot
+boxplot(charges ~ region_numeric, data = insurance, col = c("blue", "orange"),
+        main = "Box Plot of Charges by region",
+        xlab = "region_numeric", ylab = "Charges")
+```
+
+```{r}
+# Descriptive statistics
+by(insurance$charges, insurance$region_numeric, summary)
+```
+
+```{r}
+# Histogram
+par(mfrow = c(1, 4))
+hist(insurance$charges[insurance$region_numeric == "1"], col = "orange",
+     main = "Histogram of Charges for Northeast region", xlab = "Charges")
+hist(insurance$charges[insurance$region_numeric == "2"], col = "blue",
+     main = "Histogram of Charges for northwest region", xlab = "Charges")
+hist(insurance$charges[insurance$region_numeric == "3"], col = "green",
+     main = "Histogram of Charges for southeast region", xlab = "Charges")
+hist(insurance$charges[insurance$region_numeric == "4"], col = "red",
+     main = "Histogram of Charges for southwest region", xlab = "Charges")
+par(mfrow = c(1, 1))
+```
+
+```{r}
+# Separate charges for each region
+charges_northeast <- insurance$charges[insurance$region_numeric == "1"]
+charges_northwest <- insurance$charges[insurance$region_numeric == "2"]
+charges_southeast <- insurance$charges[insurance$region_numeric == "3"]
+charges_southwest <- insurance$charges[insurance$region_numeric == "4"]
+
+# Perform t-tests between pairs of regions
+t_test_northeast_northwest <- t.test(charges_northeast, charges_northwest)
+t_test_northeast_southeast <- t.test(charges_northeast, charges_southeast)
+t_test_northeast_southwest <- t.test(charges_northeast, charges_southwest)
+t_test_northwest_northeast <- t.test(charges_northwest, charges_northeast)
+t_test_northwest_southeast <- t.test(charges_northwest, charges_southeast)
+t_test_northwest_southwest <- t.test(charges_northwest, charges_southwest)
+t_test_southeast_northeast <- t.test(charges_southeast, charges_northeast)
+t_test_southeast_northwest <- t.test(charges_southeast, charges_northwest)
+t_test_southeast_southwest <- t.test(charges_southeast, charges_southwest)
+t_test_southwest_northeast <- t.test(charges_southwest, charges_northeast)
+t_test_southwest_northwest <- t.test(charges_southwest, charges_northwest)
+t_test_southwest_southeast <- t.test(charges_southwest, charges_southeast)
+
+# Display t-test results
+print(t_test_northeast_northwest)
+print(t_test_northeast_southeast)
+print(t_test_northeast_southwest)
+print(t_test_northwest_northeast)
+print(t_test_northwest_southeast)
+print(t_test_northwest_southwest)
+print(t_test_southeast_northeast)
+print(t_test_southeast_northwest)
+print(t_test_southeast_southwest)
+print(t_test_southwest_northeast)
+print(t_test_southwest_northwest)
+print(t_test_southwest_southeast)
+```
+
+```{r}
+print(charges_northeast)
+print(charges_northwest)
+
+```
+
+```{r}
+grouped_data <- split(insurance$charges, insurance$region_numeric)
+
+anova_result <- aov(charges ~ region_numeric, data = insurance)
+
+# Display the results of the ANOVA
+summary(anova_result)
+```
+
+```{r}
+model <- lm(charges ~ region_numeric, data = insurance)
+
+summary(model)
+
+plot(insurance$region_numeric, insurance$charges, main = "Regression Analysis", 
+     xlab = "region", ylab = "Charges", col = insurance$region_numeric)
+abline(model, col = "red")
+legend("top", legend = c("northeast", "northwest", "southeast", "southwest"), col = c(1, 2, 3, 4), pch = 1)
+
+```
+```{r}
+correlation_coefficient <- cor(insurance$charges, insurance$region_numeric)
+print(paste("Correlation Coefficient:", correlation_coefficient))
+
+```
+
+```{r}
+model <- lm(charges ~ region_numeric, data = insurance)
+summary(model) 
+```
