@@ -1,4 +1,4 @@
-# 🏥 US Health Insurance 
+# US Health Insurance 
 
 This project investigates how smoking status and geographic region influence healthcare charges using the **US Health Insurance Dataset**. It applies statistical techniques and data visualization to uncover patterns and relationships in medical costs, aiming to support informed policy-making and improve public health outcomes.
 
